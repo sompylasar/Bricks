@@ -262,7 +262,12 @@ TEST(TCPTest, ResolveAddress) {
 TEST(TCPTest, CanNotBindTwoSocketsToTheSamePortSimultaneously) {
   Socket s1(FLAGS_net_tcp_test_port);
   std::unique_ptr<Socket> s2;
-  ASSERT_THROW(s2.reset(new Socket(FLAGS_net_tcp_test_port)), SocketBindException);
+  try {
+    s2.reset(new Socket(FLAGS_net_tcp_test_port));
+    ASSERT_TRUE(false);
+  } catch (SocketBindException& e) {
+    EXPECT_EQ(std::to_string(FLAGS_net_tcp_test_port), e.OriginalDescription());
+  }
 }
 #endif
 

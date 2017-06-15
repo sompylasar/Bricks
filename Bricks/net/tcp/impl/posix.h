@@ -440,13 +440,13 @@ class Socket final : public SocketHandle {
     CURRENT_BRICKS_NET_LOG("S%05d bind()+listen() ...\n", static_cast<SOCKET>(socket));
 
     if (::bind(socket, reinterpret_cast<sockaddr*>(&addr_server), sizeof(addr_server)) == static_cast<SOCKET>(-1)) {
-      CURRENT_THROW(SocketBindException());
+      CURRENT_THROW(SocketBindException(std::to_string(port)));
     }
 
     CURRENT_BRICKS_NET_LOG("S%05d bind()+listen() : bind() OK\n", static_cast<SOCKET>(socket));
 
     if (::listen(socket, max_connections)) {
-      CURRENT_THROW(SocketListenException());  // LCOV_EXCL_LINE -- Not covered by the unit tests.
+      CURRENT_THROW(SocketListenException(std::to_string(port)));  // LCOV_EXCL_LINE -- Not covered by the unit tests.
     }
 
     CURRENT_BRICKS_NET_LOG("S%05d bind() and listen() : listen() OK\n", static_cast<SOCKET>(socket));
@@ -554,7 +554,7 @@ inline Connection ClientSocket(const std::string& host, T port_or_serv) {
       CURRENT_BRICKS_NET_LOG("S%05d connect() ...\n", static_cast<SOCKET>(socket));
       const int retval = ::connect(socket, p_addr, sizeof(*p_addr));
       if (retval) {
-        CURRENT_THROW(SocketConnectException());  // LCOV_EXCL_LINE -- Not covered by the unit tests.
+        CURRENT_THROW(SocketConnectException(host + (serv.empty() ? "" : " " + serv)));  // LCOV_EXCL_LINE -- Not covered by the unit tests.
       }
 
 #ifndef CURRENT_WINDOWS

@@ -53,9 +53,15 @@ struct InvalidSocketException : SocketException {};  // LCOV_EXCL_LINE -- not co
 struct AttemptedToUseMovedAwayConnection : SocketException {};
 struct SocketCreateException : SocketException {};  // LCOV_EXCL_LINE -- not covered by unit tests.
 
-struct ServerSocketException : SocketException {};
-struct SocketBindException : ServerSocketException {};
-struct SocketListenException : ServerSocketException {};  // LCOV_EXCL_LINE -- not covered by unit tests.
+struct ServerSocketException : SocketException {
+  using SocketException::SocketException;
+};
+struct SocketBindException : ServerSocketException {
+  using ServerSocketException::ServerSocketException;
+};
+struct SocketListenException : ServerSocketException {
+  using ServerSocketException::ServerSocketException;  // LCOV_EXCL_LINE -- not covered by unit tests.
+};
 struct SocketAcceptException : ServerSocketException {};  // LCOV_EXCL_LINE -- not covered by unit tests.
 
 struct ConnectionResetByPeer : SocketException {};  // LCOV_EXCL_LINE
@@ -63,7 +69,9 @@ struct ConnectionResetByPeer : SocketException {};  // LCOV_EXCL_LINE
 struct ClientSocketException : SocketException {
   using SocketException::SocketException;  // LCOV_EXCL_LINE
 };
-struct SocketConnectException : ClientSocketException {};  // LCOV_EXCL_LINE -- not covered by unit tests.
+struct SocketConnectException : ClientSocketException {
+  using ClientSocketException::ClientSocketException;  // LCOV_EXCL_LINE -- not covered by unit tests.
+};
 struct SocketResolveAddressException : ClientSocketException {
   using ClientSocketException::ClientSocketException;  // LCOV_EXCL_LINE
 };
